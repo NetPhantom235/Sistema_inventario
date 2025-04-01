@@ -1,125 +1,183 @@
-# Sistema de Gestión de Máquinas
+# Sistema de Gestión de Máquinas 🚀
+<div align="center">
+  <img src="https://via.placeholder.com/1200x400?text=Sistema+de+Gestion+Inteligente" alt="Banner" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 
-## Descripción del Proyecto
+  [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org)
+  [![MySQL](https://img.shields.io/badge/MySQL-8.0+-00758F.svg?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com)
+  [![PyQt6](https://img.shields.io/badge/PyQt-6.0+-41CD52.svg?style=for-the-badge&logo=qt&logoColor=white)](https://www.qt.io)
+  [![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+</div>
 
-Este sistema proporciona una interfaz intuitiva, profesional y bien balanceada visualmente para la gestión de máquinas, préstamos y supervisores. Está inspirado en la claridad y funcionalidad de AWS o Azure, pero con identidad única.
+<p align="center">
+  <b>Una solución empresarial moderna para la gestión inteligente de equipos y recursos</b>
+</p>
 
-## Estructura del Proyecto
+---
 
-### Archivos de Datos (CSV)
+## 🌟 Características Destacadas
 
-- `data/maquinas.csv`: Almacena información sobre las máquinas (ID, Nombre, Categoría, Estado, Ubicación)
-- `data/supervisores.csv`: Almacena información sobre los supervisores (ID, Nombre, Teléfono, Email, Departamento)
-- `data/prestamos.csv`: Registra los préstamos de máquinas (Código de Evento, ID Máquina, ID Supervisor, Fechas, Estado)
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="https://via.placeholder.com/150?text=Dashboard" width="100px;" alt=""/>
+        <br />
+        <b>Dashboard Inteligente</b>
+      </td>
+      <td align="center">
+        <img src="https://via.placeholder.com/150?text=Analytics" width="100px;" alt=""/>
+        <br />
+        <b>Análisis Predictivo</b>
+      </td>
+      <td align="center">
+        <img src="https://via.placeholder.com/150?text=QR" width="100px;" alt=""/>
+        <br />
+        <b>Gestión QR</b>
+      </td>
+      <td align="center">
+        <img src="https://via.placeholder.com/150?text=Security" width="100px;" alt=""/>
+        <br />
+        <b>Seguridad Avanzada</b>
+      </td>
+    </tr>
+  </table>
+</div>
 
-### Componentes Principales
+### 🎯 Gestión de Inventario
+- 📊 **Monitoreo en Tiempo Real**
+  - Estado actual de dispositivos
+  - Ubicación en tiempo real
+  - Historial de movimientos
 
-- **Dashboard**: Resumen ejecutivo con métricas en tiempo real y widgets personalizables
-- **Gestión de Recursos**: CRUD para máquinas, supervisores y préstamos
-- **Configuración**: Ajustes del sistema y gestión de permisos
-- **Reportes**: Exportación de datos y visualización de logs
+- 📱 **Sistema QR Integrado**
+  - Generación automática de códigos
+  - Escaneo rápido para préstamos
+  - Seguimiento simplificado
 
-## Principios de Diseño
+### 🔄 Sistema de Préstamos
+- 🎯 **Proceso Optimizado**
+  ```mermaid
+  graph LR
+    A[Solicitud] --> B[Aprobación]
+    B --> C[Préstamo]
+    C --> D[Seguimiento]
+    D --> E[Devolución]
+  ```
 
-### Intuitividad
+### 📈 Analytics & Reportes
+- 🧠 **IA Predictiva**
+- 📊 **Dashboards Personalizables**
+- 📑 **Reportes Automatizados**
 
-- Flujo claro entre secciones con menús jerárquicos y rutas visibles
-- Iconografía reconocible con tooltips para funciones complejas
+---
 
-### Consistencia
+## 🚀 Instalación Rápida
 
-- Sistema de diseño unificado en todas las pantallas (colores, tipografía, espaciado)
-- Componentes reutilizables (botones, cards, modales)
+```bash
+# Clonar repositorio
+git clone https://github.com/usuario/sistema-gestion-maquinas.git
 
-### Jerarquía Visual
+# Instalar dependencias
+pip install -r requirements.txt
 
-- Contenido prioritario destacado (métricas clave en dashboards)
-- Información progresiva para evitar sobrecarga (acordeones, pestañas)
+# Iniciar aplicación
+python main.py
+```
 
-## Tecnologías Utilizadas
+<details>
+<summary>📋 Requisitos Detallados</summary>
 
-- **Frontend**: PyQt6 con estilos personalizados
-- **Backend**: Python con manejo de datos en CSV y MySQL
-- **Visualización**: Gráficos interactivos con PyQt6.QtCharts
-- **Seguridad**: Autenticación de usuarios y encriptación de datos sensibles
+### Hardware Recomendado
+- 💻 **CPU**: Intel Core i5+
+- 🧠 **RAM**: 8GB+
+- 💾 **Almacenamiento**: 500MB+
 
-## Funcionalidades por Sección
+### Software Necesario
+- 🖥️ Windows 10/11
+- 🐍 Python 3.8+
+- 🗄️ MySQL 8.0+
 
-### Dashboard
+</details>
 
-- Resumen de máquinas por estado (disponibles, prestadas, en mantenimiento)
-- Préstamos activos y próximos a vencer
-- Actividad reciente del sistema
+---
 
-### Gestión de Máquinas
+## 🎨 Interfaz Moderna
 
-- Listado con filtros avanzados
-- Creación, edición y eliminación de máquinas
-- Generación de códigos QR para identificación
+<div align="center">
+  <img src="https://via.placeholder.com/800x400?text=Modern+Interface" alt="Interface" style="border-radius: 10px;">
+</div>
 
-### Gestión de Supervisores
+### 🎯 Características de UI/UX
+- 🌓 Modo Claro/Oscuro
+- 📱 Diseño Responsive
+- 🎨 Temas Personalizables
 
-- Registro y administración de supervisores
-- Historial de préstamos por supervisor
-- Contacto rápido (email, teléfono)
+---
 
-### Gestión de Préstamos
+## 🛠️ Arquitectura
 
-- Registro de nuevos préstamos
-- Devolución de máquinas
-- Historial y seguimiento de préstamos
+```mermaid
+graph TD
+    A[Frontend - PyQt6] --> B[Backend Service]
+    B --> C[Database Layer]
+    B --> D[Analytics Engine]
+    B --> E[IoT Integration]
+    C --> F[(MySQL)]
+    C --> G[(CSV Backup)]
+```
 
-### Configuración
+---
 
-- Ajustes del sistema
-- Gestión de usuarios y permisos
-- Copias de seguridad
+## 📚 Guías y Documentación
 
-### Reportes
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <a href="docs/user-guide.md">
+          📘 Guía de Usuario
+        </a>
+      </td>
+      <td align="center">
+        <a href="docs/admin-guide.md">
+          📗 Manual Admin
+        </a>
+      </td>
+      <td align="center">
+        <a href="docs/api-docs.md">
+          📙 API Reference
+        </a>
+      </td>
+    </tr>
+  </table>
+</div>
 
-- Exportación a PDF/Excel
-- Estadísticas de uso
-- Logs del sistema
+---
 
-## Instalación y Configuración
+## 🤝 Soporte & Comunidad
 
-### Requisitos
+<div align="center">
+  <a href="mailto:soporte@puntoticket.com">
+    <img src="https://img.shields.io/badge/Email-Soporte-blue?style=for-the-badge&logo=microsoft-outlook" alt="Email">
+  </a>
+  <a href="https://soporte.puntoticket.com">
+    <img src="https://img.shields.io/badge/Portal-Soporte-green?style=for-the-badge&logo=windows" alt="Portal">
+  </a>
+</div>
 
-- Python 3.8+
-- PyQt6
-- MySQL (opcional)
-- Dependencias adicionales (ver requirements.txt)
+---
 
-### Configuración
+## 📜 Licencia
 
-1. Clonar el repositorio
-2. Instalar dependencias: `pip install -r requirements.txt`
-3. Configurar la base de datos (MySQL o usar CSV por defecto)
-4. Ejecutar: `python main.py`
+<div align="center">
+  
+  MIT © [2025] [Punto Ticket]
+  
+  Desarrollado con ❤️ por el equipo de Punto Ticket
+</div>
 
-## Uso del Sistema
+---
 
-### Acceso
-
-- Usuario por defecto: admin
-- Contraseña por defecto: admin123
-
-### Flujo de Trabajo Típico
-
-1. Iniciar sesión en el sistema
-2. Navegar al módulo deseado mediante la barra lateral
-3. Realizar operaciones CRUD según necesidades
-4. Consultar el dashboard para obtener métricas actualizadas
-5. Generar reportes según sea necesario
-
-## Mantenimiento
-
-### Copias de Seguridad
-
-- El sistema realiza copias de seguridad automáticas cada hora
-- Se pueden realizar copias manuales desde el módulo de configuración
-
-### Logs
-
-- Los eventos del sistema se registran en `system.log`
-- Los errores críticos se notifican por email a los administradores
+<div align="center">
+  <img src="https://via.placeholder.com/800x100?text=Punto+Ticket" alt="Footer Banner">
+</div>
