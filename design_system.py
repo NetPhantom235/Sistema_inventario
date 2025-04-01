@@ -4,11 +4,14 @@ from PyQt6.QtGui import QColor, QFont, QFontDatabase
 CLOUD_THEME = {
     "colors": {
         "primary": "#0078d7",        # Azure Blue
+        "primary_dark": "#005a9e",    # Darker Azure Blue
         "secondary": "#232f3e",       # AWS Dark Blue
         "accent": "#ff9900",          # AWS Orange
+        "hover": "#2d3033",          # Hover state color
         "success": "#00bc78",         # Modern Green
         "error": "#dc3545",
         "warning": "#ffb900",          # Bootstrap Red
+        "info": "#0dcaf0",            # Info Blue
         "background": "#1a1d21",     # GitHub Dark
         "text_light": "#f0f6fc",    # Same as text.primary
         "card": "#2d2d2d",
@@ -16,7 +19,8 @@ CLOUD_THEME = {
         "text": {
             "primary": "#f0f6fc",    # GitHub Text
             "secondary": "#8b949e"   # GitHub Secondary
-        }
+        },
+        "border": "#30363d"        # GitHub Border Color
     },
     "typography": {
         "font_family": "'Segoe UI', 'SF Pro Text', system-ui",

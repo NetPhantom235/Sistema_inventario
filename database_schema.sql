@@ -1,107 +1,123 @@
--- MySQL Workbench Forward Engineering
+-- MySQL Schema for Cloud Inventory System
+-- Enterprise-grade structure with AWS/Azure/Google Cloud patterns
 
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO';
+CREATE DATABASE IF NOT EXISTS cloud_inventory
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
--- -----------------------------------------------------
--- Schema gestion_maquinas
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `gestion_maquinas` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE cloud_inventory;
 
--- -----------------------------------------------------
--- Table `gestion_maquinas`.`supervisores`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `gestion_maquinas`.`supervisores` (
-  `id` CHAR(36) NOT NULL,
-  `nombre` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
-  `telefono` VARCHAR(20) NULL,
-  `permiso` ENUM('basico', 'avanzado', 'admin') NOT NULL DEFAULT 'basico',
-  `fecha_registro` DATETIME NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
-ENGINE = InnoDB;
+-- Core Entities
+CREATE TABLE IF NOT EXISTS maquinas (
+    id VARCHAR(36) PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    categoria VARCHAR(100),
+    estado ENUM('disponible', 'en_uso', 'mantenimiento') NOT NULL DEFAULT 'disponible',
+    ultimo_mantenimiento DATE,
+    codigo_qr VARCHAR(255),
+    supervisor_id VARCHAR(36),
+    ubicacion VARCHAR(100),
+    especificaciones JSON,
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_estado (estado),
+    INDEX idx_categoria (categoria),
+    INDEX idx_ubicacion (ubicacion)
+) ENGINE=InnoDB;
 
--- -----------------------------------------------------
--- Table `gestion_maquinas`.`maquinas`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `gestion_maquinas`.`maquinas` (
-  `id` CHAR(36) NOT NULL,
-  `nombre` VARCHAR(255) NOT NULL,
-  `categoria` VARCHAR(100) NOT NULL,
-  `estado` ENUM('disponible', 'en_uso', 'mantenimiento') NOT NULL DEFAULT 'disponible',
-  `ultimo_mantenimiento` DATE NULL,
-  `codigo_qr` VARCHAR(255) NULL,
-  `supervisor_id` CHAR(36) NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_maquinas_supervisores_idx` (`supervisor_id` ASC) VISIBLE,
-  INDEX `idx_estado` (`estado` ASC) VISIBLE,
-  CONSTRAINT `fk_maquinas_supervisores`
-    FOREIGN KEY (`supervisor_id`)
-    REFERENCES `gestion_maquinas`.`supervisores` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS supervisores (
+    id VARCHAR(36) PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    telefono VARCHAR(20),
+    permiso ENUM('basico', 'avanzado', 'admin') NOT NULL DEFAULT 'basico',
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ultimo_acceso DATETIME,
+    INDEX idx_permiso (permiso)
+) ENGINE=InnoDB;
 
--- -----------------------------------------------------
--- Table `gestion_maquinas`.`prestamos`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `gestion_maquinas`.`prestamos` (
-  `id` CHAR(36) NOT NULL,
-  `maquina_id` CHAR(36) NOT NULL,
-  `supervisor_id` CHAR(36) NOT NULL,
-  `fecha_prestamo` DATETIME NOT NULL,
-  `fecha_devolucion` DATETIME NULL,
-  `observaciones` TEXT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_prestamos_maquinas_idx` (`maquina_id` ASC) VISIBLE,
-  INDEX `fk_prestamos_supervisores_idx` (`supervisor_id` ASC) VISIBLE,
-  INDEX `idx_fecha_prestamo` (`fecha_prestamo` DESC) VISIBLE,
-  CONSTRAINT `fk_prestamos_maquinas`
-    FOREIGN KEY (`maquina_id`)
-    REFERENCES `gestion_maquinas`.`maquinas` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_prestamos_supervisores`
-    FOREIGN KEY (`supervisor_id`)
-    REFERENCES `gestion_maquinas`.`supervisores` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+-- Resource Tracking
+CREATE TABLE IF NOT EXISTS prestamos (
+    id VARCHAR(36) PRIMARY KEY,
+    maquina_id VARCHAR(36) NOT NULL,
+    supervisor_id VARCHAR(36) NOT NULL,
+    fecha_prestamo DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_devolucion DATETIME,
+    observaciones TEXT,
+    estado ENUM('activo', 'completado', 'vencido') NOT NULL DEFAULT 'activo',
+    codigo_prestamo VARCHAR(128) UNIQUE,
+    FOREIGN KEY (maquina_id) REFERENCES maquinas(id),
+    FOREIGN KEY (supervisor_id) REFERENCES supervisores(id),
+    INDEX idx_estado_prestamo (estado),
+    INDEX idx_fechas (fecha_prestamo, fecha_devolucion)
+) ENGINE=InnoDB;
 
--- -----------------------------------------------------
--- Table `gestion_maquinas`.`mantenimientos`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `gestion_maquinas`.`mantenimientos` (
-  `id` CHAR(36) NOT NULL,
-  `maquina_id` CHAR(36) NOT NULL,
-  `fecha_inicio` DATETIME NOT NULL,
-  `fecha_fin` DATETIME NULL,
-  `descripcion` TEXT NOT NULL,
-  `tecnico` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_mantenimientos_maquinas_idx` (`maquina_id` ASC) VISIBLE,
-  CONSTRAINT `fk_mantenimientos_maquinas`
-    FOREIGN KEY (`maquina_id`)
-    REFERENCES `gestion_maquinas`.`maquinas` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+-- Maintenance System
+CREATE TABLE IF NOT EXISTS mantenimientos (
+    id VARCHAR(36) PRIMARY KEY,
+    maquina_id VARCHAR(36) NOT NULL,
+    supervisor_id VARCHAR(36) NOT NULL,
+    severidad ENUM('critica', 'alta', 'media', 'baja') NOT NULL,
+    descripcion_problema TEXT NOT NULL,
+    detalles_resolucion TEXT,
+    estado ENUM('reportado', 'en_progreso', 'resuelto') NOT NULL DEFAULT 'reportado',
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_resolucion DATETIME,
+    costo DECIMAL(10,2),
+    FOREIGN KEY (maquina_id) REFERENCES maquinas(id),
+    FOREIGN KEY (supervisor_id) REFERENCES supervisores(id),
+    INDEX idx_estado_mant (estado)
+) ENGINE=InnoDB;
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- Audit System
+CREATE TABLE IF NOT EXISTS auditoria (
+    id VARCHAR(36) PRIMARY KEY,
+    tabla_afectada VARCHAR(100) NOT NULL,
+    accion VARCHAR(50) NOT NULL,
+    usuario_id VARCHAR(36) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    datos_anteriores TEXT,
+    datos_nuevos TEXT,
+    INDEX idx_auditoria_fecha (fecha),
+    INDEX idx_auditoria_usuario (usuario_id)
+) ENGINE=InnoDB;
 
--- -----------------------------------------------------
--- Data Population Script
--- -----------------------------------------------------
--- Add sample supervisors
-INSERT INTO supervisores (id, nombre, email, telefono, permiso, fecha_registro) VALUES
-(UUID(), 'Juan Perez', 'juan@empresa.com', '+54912345678', 'admin', NOW()),
-(UUID(), 'Maria Gomez', 'maria@empresa.com', '+54987654321', 'avanzado', NOW());
+-- Movement History
+CREATE TABLE IF NOT EXISTS historial_movimientos (
+    id VARCHAR(36) PRIMARY KEY,
+    maquina_id VARCHAR(36) NOT NULL,
+    ubicacion_anterior VARCHAR(100),
+    ubicacion_nueva VARCHAR(100) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    supervisor_id VARCHAR(36) NOT NULL,
+    FOREIGN KEY (maquina_id) REFERENCES maquinas(id),
+    FOREIGN KEY (supervisor_id) REFERENCES supervisores(id),
+    INDEX idx_movimientos_fecha (fecha)
+) ENGINE=InnoDB;
 
--- Add maintenance user
-CREATE USER 'gestion_app'@'localhost' IDENTIFIED BY 'SecurePass123!';
-GRANT ALL PRIVILEGES ON gestion_maquinas.* TO 'gestion_app'@'localhost';
-FLUSH PRIVILEGES;
+-- Reference Tables
+CREATE TABLE IF NOT EXISTS ubicaciones (
+    id VARCHAR(36) PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    zona ENUM('norte', 'sur', 'este', 'oeste', 'central') NOT NULL,
+    descripcion TEXT,
+    capacidad INT,
+    INDEX idx_zona (zona)
+) ENGINE=InnoDB;
+
+-- Security Tables
+CREATE TABLE IF NOT EXISTS usuarios (
+    id VARCHAR(36) PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    rol VARCHAR(50) NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_username (username)
+) ENGINE=InnoDB;
+
+-- Versioning Table
+CREATE TABLE IF NOT EXISTS version_schema (
+    version VARCHAR(32) PRIMARY KEY,
+    fecha_aplicacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    checksum VARCHAR(64) NOT NULL
+) ENGINE=InnoDB;
