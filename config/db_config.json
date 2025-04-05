@@ -1,6 +1,6 @@
 {
-    "host": "localhost",
+    "host": "",
     "user": "root",
-    "password": "soporte.123@",
+    "password": "",
     "database": "cloud_inventory"
 }
